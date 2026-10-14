@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Situation report</title>
+<style>
+@page { size: A4; margin: 11mm; }
+body { font-family: "Noto Sans", "Noto Sans Devanagari", "DejaVu Sans", Arial, sans-serif; font-size: 8.6pt; color:#1b1b1b; line-height:1.32; }
+h1 { font-size: 14pt; margin: 0 0 2px 0; } h2 { font-size: 10pt; margin: 7px 0 2px 0; border-bottom: 1px solid #999; }
+.meta { color:#555; font-size:7.8pt; } .row { display:flex; gap:10px; } .col { flex:1; }
+table { border-collapse: collapse; width:100%; } td, th { border:1px solid #bbb; padding:2px 4px; text-align:left; font-size:8pt; }
+th { background:#eee; } .warn { background:#fff3cd; border:1px solid #e0c36a; padding:3px 5px; font-size:7.8pt; }
+img { width:100%; border:1px solid #999; } .small { font-size:7pt; color:#444; } .np { font-size:8.6pt; }
+</style></head><body>
+<h1>Situation report &mdash; flood &amp; debris impact (EN / ने)</h1>
+<div class="meta">Event date: {{ s.event_date }} &middot; AOI (lon/lat): {{ s.aoi | join(', ') }} &middot; Method: {{ s.method }} &middot;
+Sentinel-1 pair: {{ s.s1_pair_text }} &middot; OSM snapshot: {{ s.osm_snapshot }} &middot; Generated: {{ generated }}
+{% if s.synthetic %}<br><b>SYNTHETIC DEMO DATA &mdash; not a real event.</b>{% endif %}</div>
+<div class="warn">{{ disclaimer }}</div>
+
+<div class="row"><div class="col">
+<h2>Key numbers</h2>
+<table>
+<tr><th>Flooded / debris area</th><td>{{ s.flood_area_km2 }} km&sup2; (water {{ s.water_km2 }}, debris {{ s.debris_km2 }})</td></tr>
+<tr><th>Buildings likely / possibly hit</th><td>{{ s.buildings.hit }} / {{ s.buildings.possible }} of {{ s.buildings.total }}</td></tr>
+<tr><th>Road length likely hit</th><td>{{ s.roads.hit_km }} km ({{ s.roads.hit_ways }} ways)</td></tr>
+<tr><th>Bridges likely / possibly hit</th><td>{{ s.bridges.hit }} / {{ s.bridges.possible }} of {{ s.bridges.total }}</td></tr>
+<tr><th>Settlements cut off (confirmed / conservative)</th><td><b>{{ s.settlements.cut_off }}</b> / {{ s.settlements.cut_off_conservative }} of {{ s.settlements.total }}</td></tr>
+</table>
+<h2>English summary</h2><p>{{ text_en }}</p>
+<h2>नेपाली सारांश</h2><p class="np">{{ text_ne }}</p>
+<div class="small">नेपाली अनुवाद टेम्प्लेटबाट बनेको हो; प्रयोगअघि मातृभाषीले जाँच गर्नुपर्छ। (Nepali text is template-based; have a native speaker review it.)</div>
+</div><div class="col">
+<h2>Map</h2>{% if map_b64 %}<img src="data:image/png;base64,{{ map_b64 }}">{% endif %}
+<div class="small">Blue = new water, brown = debris/disturbed, red/orange roads = hit/possibly hit, red dots = cut-off settlements.</div>
+</div></div>
+
+<h2>Settlements cut off from nearest town / hospital</h2>
+{% if cut %}<table><tr><th>Settlement</th><th>Status (conservative)</th><th>Hospital access</th><th>Road distance before</th></tr>
+{% for r in cut %}<tr><td>{{ r.name }}</td><td>{{ r.status_conservative }}</td><td>{{ r.hospital_status }}</td><td>{{ r.dist }}</td></tr>{% endfor %}</table>
+{% else %}<p>None detected.</p>{% endif %}
+
+{% if s.flowpath %}<h2>Flood path (bonus)</h2><p>Downstream trace {{ s.flowpath.length_km }} km; settlements within {{ s.flowpath.buffer_m }} m:
+{{ s.flowpath.settlements | join(', ') if s.flowpath.settlements else 'none' }}.</p>{% endif %}
+
+<h2>What this system cannot do</h2>
+<ul class="small">
+<li>Sentinel satellites revisit every few days: no early warning, and the "after" image may be days old.</li>
+<li>Radar in steep valleys suffers layover/shadow; these areas are masked, so flooding there is NOT assessed.</li>
+<li>"Hit" means overlap with the detected extent, not structural damage. Small objects and flows narrower than ~20 m may be missed.</li>
+<li>Cut-off analysis uses pre-event OSM roads: unmapped roads/trails, helicopter or foot access, and landslide blockages are not modelled.</li>
+<li>Debris detection is heuristic (backscatter rise next to water) and untested outside the validation set.</li>
+</ul>
+<div class="small"><b>Attribution:</b> {{ attribution | join(' ') }}</div>
+</body></html>

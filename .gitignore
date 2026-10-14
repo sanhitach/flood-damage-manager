@@ -1,0 +1,14 @@
+data/*
+!data/.gitkeep
+outputs/*
+!outputs/.gitkeep
+.env
+__pycache__/
+*.pyc
+*.tif
+*.SAFE/
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+*.pt
+!models/.gitkeep

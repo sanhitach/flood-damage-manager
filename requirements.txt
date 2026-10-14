@@ -1,0 +1,25 @@
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+geopandas>=1.0
+shapely>=2.0
+pyogrio
+rasterio>=1.3
+pyproj
+affine
+requests
+pyyaml
+python-dotenv
+tqdm
+matplotlib
+jinja2
+weasyprint        # optional: HTML -> PDF (needs pango). Falls back to HTML if missing
+streamlit>=1.30
+streamlit-folium
+folium
+openeo            # CDSE server-side SAR processing
+pystac-client     # CDSE STAC search
+# --- ML (only needed for the U-Net) ---
+torch
+segmentation-models-pytorch
+pytest

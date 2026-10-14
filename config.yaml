@@ -1,0 +1,40 @@
+paths:
+  data_dir: data
+  output_dir: outputs
+
+cdse:
+  stac_url: https://stac.dataspace.copernicus.eu/v1
+  openeo_url: openeo.dataspace.copernicus.eu
+  s1_resolution_m: 20            # use 10 for small AOIs
+  backscatter_coefficient: sigma0-ellipsoid
+  max_pair_search_days: 30       # how far before/after the event to look for a same-track pair
+  min_aoi_coverage: 0.8          # fraction of AOI a Sentinel-1 scene must cover
+
+osm:
+  latest_available: "2026-07-27" # latest ohsome snapshot per the brief; update if ohsome moves on
+
+detection:
+  speckle_window: 5
+  drop_db: 3.0          # backscatter drop (dB) that counts as "new water"
+  water_db: -17.0       # VV after-image must be darker than this to be water
+  rise_db: 3.0          # backscatter rise (dB) next to water = candidate debris
+  debris_corridor_m: 150
+  max_slope_deg: 30     # mask steep terrain (layover/shadow, implausible flooding)
+  min_area_m2: 4000
+  unet_threshold: 0.5
+  unet_tile: 256
+  unet_overlap: 64
+
+damage:
+  near_buffer_m: 40     # "possibly hit" if within this distance of the flood extent
+
+network:
+  snap_m: 1000          # max distance from a settlement to the nearest road node
+
+flowpath:
+  buffer_m: 500
+  max_dem_pixels: 3000000
+
+s2:
+  ndwi_water: 0.1
+  search_days: 12

@@ -1,0 +1,28 @@
+name: floodmap
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pandas
+  - geopandas>=1.0
+  - shapely>=2
+  - rasterio
+  - pyogrio
+  - pyproj
+  - matplotlib
+  - jinja2
+  - pyyaml
+  - requests
+  - pytest
+  - pip
+  - pip:
+      - openeo
+      - pystac-client
+      - python-dotenv
+      - streamlit
+      - streamlit-folium
+      - folium
+      - weasyprint
+      - torch
+      - segmentation-models-pytorch
